@@ -15,4 +15,15 @@ This document is the design record for the chatbot's matching logic — it maps 
 | Found | Return item, status, and ETA — marked Resolved |
 | Not found | Offer retry or hand off to a staff — marked Escalated |
 
+## 2. Returns & refunds
+
+![Returns and refunds decision tree](./assets/returns-refunds-flow.svg)
+
+| Step | Logic |
+|---|---|
+| Trigger phrases | "return", "refund", "returns & refunds" |
+| Ask | Which of 3 sub-topics (quick replies) |
+| How to return | Static instructions — Resolved |
+| Refund status | Asks for order number, then checks whether that order is marked `Delivered` before replying — Resolved either way, no escalation path here |
+| Return policy | Static 30-day policy text — Resolved |
 
