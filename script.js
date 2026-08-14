@@ -90,13 +90,53 @@ function handleUserChoice(label) {
 function route(text) {
   const t = text.toLowerCase();
 
-  // Ticket-type matching (order status, returns/refunds, stock availability)
-  // lands in follow-up commits. Everything falls back for now.
+  if (awaiting === 'orderNumber') {
+    lookupOrder(t, 'status');
+    return;
+  }
 
+  // --- specific sub-intents FIRST ---
+
+  if (t.includes('try again')) {
+    awaiting = 'orderNumber';
+    addMessage('bot', "No problem — what's the order number?");
+    return;
+  }
+
+  // --- broader category matchers ---
+
+  if (t.includes('order status') || (t.includes('order') && (t.includes('where') || t.includes('ship')))) {
+    awaiting = 'orderNumber';
+    addMessage('bot', "Sure — what's your order number? It looks like <code>NR####</code> and is in your confirmation email.<br><span style='color:#8B93A0;font-size:12px'>(Try NR1042, NR2091, or NR3087 for this demo)</span>");
+    return;
+  }
+
+  // fallback — returns/refunds and stock-availability matching land in later commits
   addMessage('bot',
     "I couldn't match that to order status, returns/refunds, or stock availability yet — those are the areas I handle. Want to try one of these, or should I hand this to a teammate?",
     { quickReplies: ['Order status', 'Returns & refunds', 'Stock availability', 'Talk to a human'], stamp: true, escalate: true }
   );
+}
+
+function lookupOrder(text, mode) {
+  const match = text.toUpperCase().match(/NR\d{3,4}/);
+  const order = match ? ORDERS[match[0]] : null;
+  awaiting = null;
+
+  if (!order) {
+    addMessage('bot',
+      "I couldn't find that order number. Double check it against your confirmation email, or I can loop in a teammate.",
+      { quickReplies: ['Try again', 'Talk to a human'], stamp: true, escalate: true }
+    );
+    return;
+  }
+
+  if (mode === 'status') {
+    addMessage('bot',
+      `Order <b>${match[0]}</b> — ${order.item}<br>Status: <b>${order.status}</b><br>${order.shipped ? 'Expected/actual arrival: ' + order.eta : 'Not yet shipped — estimated ship-by ' + order.eta}`,
+      { stamp: true }
+    );
+  }
 }
 
 sendBtn.addEventListener('click', () => {
