@@ -94,8 +94,13 @@ function route(text) {
     lookupOrder(t, 'status');
     return;
   }
+  if (awaiting === 'refundOrderNumber') {
+    lookupOrder(t, 'refund');
+    return;
+  }
 
-  // --- specific sub-intents FIRST ---
+  // --- specific sub-intents FIRST (they also contain "return"/"refund", so
+  //     they must be checked before the broader category matcher below) ---
 
   if (t.includes('try again')) {
     awaiting = 'orderNumber';
@@ -103,7 +108,29 @@ function route(text) {
     return;
   }
 
-  // --- broader category matchers ---
+  if (t.includes('how do i return')) {
+    addMessage('bot',
+      "To return an item: 1) Go to <b>Order History</b> and select the item · 2) Choose a reason and print the prepaid label · 3) Drop it at any carrier location. Refunds post within 5–7 business days of us receiving it.",
+      { stamp: true }
+    );
+    return;
+  }
+
+  if (t.includes("where's my refund") || t.includes('wheres my refund') || t.includes('refund status')) {
+    awaiting = 'refundOrderNumber';
+    addMessage('bot', "What's the order number for the return? <span style='color:#8B93A0;font-size:12px'>(Try NR3087 — already delivered — for this demo)</span>");
+    return;
+  }
+
+  if (t.includes('return policy')) {
+    addMessage('bot',
+      "Our policy: items can be returned within 30 days of delivery, unworn and with tags. Refunds go back to the original payment method. Final-sale items are marked at checkout and aren't eligible.",
+      { stamp: true }
+    );
+    return;
+  }
+
+  // --- broader category matchers (checked AFTER the specific ones above) ---
 
   if (t.includes('order status') || (t.includes('order') && (t.includes('where') || t.includes('ship')))) {
     awaiting = 'orderNumber';
@@ -111,7 +138,14 @@ function route(text) {
     return;
   }
 
-  // fallback — returns/refunds and stock-availability matching land in later commits
+  if (t.includes('returns & refunds') || t.includes('return') || t.includes('refund')) {
+    addMessage('bot', "Got it — what's this about?", {
+      quickReplies: ['How do I return an item', "Where's my refund", 'Return policy']
+    });
+    return;
+  }
+
+  // fallback — stock-availability matching lands in the next commit
   addMessage('bot',
     "I couldn't match that to order status, returns/refunds, or stock availability yet — those are the areas I handle. Want to try one of these, or should I hand this to a teammate?",
     { quickReplies: ['Order status', 'Returns & refunds', 'Stock availability', 'Talk to a human'], stamp: true, escalate: true }
@@ -136,6 +170,18 @@ function lookupOrder(text, mode) {
       `Order <b>${match[0]}</b> — ${order.item}<br>Status: <b>${order.status}</b><br>${order.shipped ? 'Expected/actual arrival: ' + order.eta : 'Not yet shipped — estimated ship-by ' + order.eta}`,
       { stamp: true }
     );
+  } else {
+    if (order.status !== 'Delivered') {
+      addMessage('bot',
+        `Order <b>${match[0]}</b> hasn't been marked delivered yet, so a return hasn't been logged. Once it arrives, start the return from Order History and refunds process within 5–7 business days of receipt.`,
+        { stamp: true }
+      );
+    } else {
+      addMessage('bot',
+        `Order <b>${match[0]}</b> was delivered — if a return's been dropped off, refunds typically post within 5–7 business days. Nothing logged yet on our end for this one; if you already shipped it back, it may still be in transit to us.`,
+        { stamp: true }
+      );
+    }
   }
 }
 
