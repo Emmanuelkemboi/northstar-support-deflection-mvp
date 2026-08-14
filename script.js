@@ -106,6 +106,14 @@ function route(text) {
   // --- specific sub-intents FIRST (they also contain "return"/"refund", so
   //     they must be checked before the broader category matcher below) ---
 
+  if (t.includes('talk to a human') || t.includes('talk to human')) {
+    addMessage('bot',
+      "No problem — I've flagged this conversation for a teammate to pick up, and they'll follow up shortly. Anything else I can try in the meantime?",
+      { quickReplies: ['Order status', 'Returns & refunds'] }
+    );
+    return;
+  }
+
   if (t.includes('try again')) {
     awaiting = 'orderNumber';
     addMessage('bot', "No problem — what's the order number?");
@@ -161,7 +169,7 @@ function route(text) {
     return;
   }
 
-  // fallback — "talk to a human" handling lands in the next commit
+  // fallback
   addMessage('bot',
     "I couldn't match that to order status, returns/refunds, or stock availability yet — those are the areas I handle. Want to try one of these, or should I hand this to a teammate?",
     { quickReplies: ['Order status', 'Returns & refunds', 'Stock availability', 'Talk to a human'], stamp: true, escalate: true }
