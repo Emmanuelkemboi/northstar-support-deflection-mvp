@@ -41,3 +41,9 @@ This document is the design record for the chatbot's matching logic — it maps 
 | Not found | Offer retry or hand off to a staff — Escalated |
 
 ---
+
+## Known design limits (also flagged in the go-live note)
+- Matching is keyword-based, not true NLU — unusual phrasing falls back to escalation more than a real language model would.
+- Stock matching needs a close string match; typos or very different product phrasing won't resolve.
+- No conversation memory — each message is evaluated independently of prior ones.
+
