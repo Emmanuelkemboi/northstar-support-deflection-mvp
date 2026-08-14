@@ -27,3 +27,17 @@ This document is the design record for the chatbot's matching logic — it maps 
 | Refund status | Asks for order number, then checks whether that order is marked `Delivered` before replying — Resolved either way, no escalation path here |
 | Return policy | Static 30-day policy text — Resolved |
 
+## 3. Stock availability
+
+![Stock availability decision tree](./assets/stock-availability-flow.svg)
+
+| Step | Logic |
+|---|---|
+| Trigger phrases | "stock availability", "back in stock", "different size" |
+| Ask | Item name (free text) |
+| Lookup | Match against `STOCK` object (close string match, not fuzzy) |
+| In stock | Return available sizes — Resolved |
+| Out of stock | Return restock date — Resolved |
+| Not found | Offer retry or hand off to a staff — Escalated |
+
+---
