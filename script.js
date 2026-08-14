@@ -98,6 +98,10 @@ function route(text) {
     lookupOrder(t, 'refund');
     return;
   }
+  if (awaiting === 'stockItem') {
+    lookupStock(t);
+    return;
+  }
 
   // --- specific sub-intents FIRST (they also contain "return"/"refund", so
   //     they must be checked before the broader category matcher below) ---
@@ -105,6 +109,12 @@ function route(text) {
   if (t.includes('try again')) {
     awaiting = 'orderNumber';
     addMessage('bot', "No problem — what's the order number?");
+    return;
+  }
+
+  if (t.includes('search again')) {
+    awaiting = 'stockItem';
+    addMessage('bot', "No problem — which item are you checking?");
     return;
   }
 
@@ -145,7 +155,13 @@ function route(text) {
     return;
   }
 
-  // fallback — stock-availability matching lands in the next commit
+  if (t.includes('stock availability') || t.includes('back in stock') || t.includes('different size') || t.includes('stock')) {
+    awaiting = 'stockItem';
+    addMessage('bot', "Which item are you checking? Type the item name — e.g. <i>trail runner jacket</i>, <i>pour-over set</i>, or <i>wool throw</i>.");
+    return;
+  }
+
+  // fallback — "talk to a human" handling lands in the next commit
   addMessage('bot',
     "I couldn't match that to order status, returns/refunds, or stock availability yet — those are the areas I handle. Want to try one of these, or should I hand this to a teammate?",
     { quickReplies: ['Order status', 'Returns & refunds', 'Stock availability', 'Talk to a human'], stamp: true, escalate: true }
@@ -182,6 +198,32 @@ function lookupOrder(text, mode) {
         { stamp: true }
       );
     }
+  }
+}
+
+function lookupStock(text) {
+  awaiting = null;
+  const key = Object.keys(STOCK).find(k => text.includes(k) || k.includes(text));
+
+  if (!key) {
+    addMessage('bot',
+      "I couldn't find that item in our catalog. Try the exact product name, or I can loop in a teammate.",
+      { quickReplies: ['Search again', 'Talk to a human'], stamp: true, escalate: true }
+    );
+    return;
+  }
+
+  const item = STOCK[key];
+  if (item.inStock) {
+    addMessage('bot',
+      `Good news — <b>${key}</b> is in stock. Available sizes: ${item.sizes.join(', ')}.`,
+      { stamp: true }
+    );
+  } else {
+    addMessage('bot',
+      `<b>${key}</b> is currently out of stock. Expected restock: ${item.restock}.`,
+      { stamp: true }
+    );
   }
 }
 
