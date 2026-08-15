@@ -14,7 +14,7 @@ Built by:
 - [Project charter](https://docs.google.com/document/d/1bFPIbFYlttUt4Bdvw_-3ugtwAO85SmnUqCwG0ClW-rg/edit?usp=sharing)
 - **Board:** [Trello Board](https://trello.com/invite/b/6a7cb29070d3c4e2b63218af/ATTI6674c657941547b28827f131d0c5636387330F41/plpgroup95)
 - **Repo:** [GitHub Repository](https://github.com/Emmanuelkemboi/northstarsupportdeflectionmvp)
-- **Decision-tree design:** `decision-tree-design.md`
+- **Decision-tree design:**[Decision-tree design](./decision-tree-design.md)
 - [Go-live readiness note](./assets/Northstar_GoLive_Note.docx)
 
 ---
