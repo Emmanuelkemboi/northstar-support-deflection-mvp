@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Northstar Retail — Support Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">Northstar Retail
+      <small>Support Deflection MVP</small>
+    </div>
+
+    <div class="stat">
+      <div class="num" id="deflectedCount">0</div>
+      <div class="label">Tickets deflected today</div>
+    </div>
+
+    <div class="stat">
+      <div class="num">3/3</div>
+      <div class="label">Categories covered</div>
+    </div>
+
+    <div class="queue-list" id="queueList">
+      <div class="queue-item"><span>Order status</span><span class="tag">live</span></div>
+      <div class="queue-item"><span>Returns &amp; refunds</span><span class="tag">live</span></div>
+      <div class="queue-item"><span>Stock availability</span><span class="tag">live</span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <h1>Support Assistant</h1>
+      <span class="status">Online</span>
+    </header>
+
+    <div class="chat" id="chat" aria-live="polite"></div>
+
+    <div class="composer">
+      <input
+        id="userInput"
+        type="text"
+        placeholder="Type your question…"
+        autocomplete="off"
+        aria-label="Type your support question"
+      >
+      <button id="sendBtn">Send</button>
+    </div>
+
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
