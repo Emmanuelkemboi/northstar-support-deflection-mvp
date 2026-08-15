@@ -59,3 +59,20 @@ Try these to test it:
 - "How do I return an item?"
 - "Where's my refund?" → then enter `NR3087`
 - Something unrelated (e.g. "hello") → should offer to escalate, not break
+
+---
+
+## Try it: quick test script
+
+| You type | Expected result |
+|---|---|
+| Where's my order? | Bot asks for order number |
+| NR1042 | Bot returns "In Transit," ETA Aug 14 |
+| Returns & refunds | Bot shows 3 sub-options |
+| How do I return an item | Bot gives return steps |
+| Is this back in stock? | Bot asks which item |
+| trail runner jacket | Bot returns "in stock," sizes S/M/L |
+| pour-over set | Bot returns "out of stock," restock date |
+| asdkfjhskdjf | Bot offers fallback + "Talk to a human" |
+
+Note: once you click any button, all earlier buttons in the chat lock (grey out) so you can only respond to the latest message — this matches how a real support chat should behave.
