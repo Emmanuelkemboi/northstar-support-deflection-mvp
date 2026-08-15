@@ -76,3 +76,32 @@ Try these to test it:
 | asdkfjhskdjf | Bot offers fallback + "Talk to a human" |
 
 Note: once you click any button, all earlier buttons in the chat lock (grey out) so you can only respond to the latest message — this matches how a real support chat should behave.
+
+---
+
+## Known limitations (see the go-live note for full details)
+
+- Order and stock data is hardcoded/mock, not connected to a real database
+- Keyword matching only — unusual phrasing may not be recognized
+- Stock lookup matches on exact-ish product names only, not fuzzy search
+- No identity verification before showing order details
+
+---
+
+## Working on this as a team
+
+To keep the commit/edit audit trail meaningful, try to keep changes scoped to the file that matches your task:
+- Logic/rules changes → `script.js`
+- Visual/styling changes → `styles.css`
+- Structure/layout changes → `index.html`
+
+Use real commit messages in the format `<type>: <what changed> - <why it matters>`, for example:
+
+```
+feat: add stock-availability lookup - covers 3rd ticket type
+fix: reorder intent matching - specific replies were being swallowed by generic category check
+style: adjust mobile chat spacing - was unreadable under 400px width
+docs: update README test script - added new stock-availability examples
+```
+
+Avoid vague messages like "updates" or "fixed stuff" — the brief specifically calls these out as unacceptable.
